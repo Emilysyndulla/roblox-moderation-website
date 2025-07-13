@@ -1,20 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Roblox Chat Viewer</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h2>Chat Output</h2>
-  <pre id="console"></pre>
+  <h2>Roblox Chat Viewer</h2>
+  <div id="console-container">
+    <pre id="console"></pre>
+  </div>
 
-  <script>
-    const socket = new WebSocket("ws://YOUR_IP_OR_DOMAIN:3000");
-
-    socket.onmessage = function(event) {
-      const consoleOutput = document.getElementById("console");
-      consoleOutput.textContent += event.data + "\n";
-    };
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
