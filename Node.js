@@ -1,10 +1,15 @@
 // server.js
 const WebSocket = require("ws");
 const express = require("express");
+const path = require("path");
+
 const app = express();
 const wss = new WebSocket.Server({ noServer: true });
 
 const clients = new Set();
+
+// Serve static files from the "public" folder
+app.use(express.static(path.join(__dirname, "public")));
 
 wss.on("connection", (ws) => {
   clients.add(ws);
@@ -12,6 +17,7 @@ wss.on("connection", (ws) => {
 });
 
 app.use(express.json());
+
 app.post("/send", (req, res) => {
   const message = req.body.message;
   clients.forEach((client) => {
@@ -22,8 +28,15 @@ app.post("/send", (req, res) => {
   res.send("Message sent to WebSocket clients.");
 });
 
-const server = app.listen(3000, () => {
-  console.log("HTTP/WebSocket server running on port 3000");
+// Optional: a simple health check or message at root (served by index.html if exists)
+// app.get("/", (req, res) => {
+//   res.send("Roblox Chat Relay Server is running");
+// });
+
+const PORT = process.env.PORT || 3000;
+
+const server = app.listen(PORT, () => {
+  console.log(`HTTP/WebSocket server running on port ${PORT}`);
 });
 
 server.on("upgrade", (req, socket, head) => {
