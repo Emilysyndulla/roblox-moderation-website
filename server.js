@@ -1,51 +1,40 @@
-const express = require("express");
 const WebSocket = require("ws");
+const express = require("express");
+const path = require("path");
 
-const path = require('path');
-app.use(express.static(path.join(__dirname, 'public')));
-
-const app = express();
-app.use(express.json());
+const app = express();  // Declare app before usage
 
 const wss = new WebSocket.Server({ noServer: true });
+
 const clients = new Set();
 
-// Broadcast helper
-function broadcast(message) {
-  clients.forEach(client => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(message);
-    }
-  });
-}
+app.use(express.static(path.join(__dirname, "public")));
 
-// WebSocket connection handler
 wss.on("connection", (ws) => {
   clients.add(ws);
   ws.on("close", () => clients.delete(ws));
 });
 
-// POST /send endpoint to receive chat messages
+app.use(express.json());
+
 app.post("/send", (req, res) => {
-  const { message } = req.body;
-  if (!message) return res.status(400).send("Missing message");
-
-  broadcast(message);
-  res.send("Message sent");
+  const message = req.body.message;
+  clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(message);
+    }
+  });
+  res.send("Message sent to WebSocket clients.");
 });
 
-// Optional: simple homepage to avoid "Cannot GET /"
-app.get("/", (req, res) => {
-  res.send("Roblox Chat Relay Server is running");
+const PORT = process.env.PORT || 3000;
+
+const server = app.listen(PORT, () => {
+  console.log(`HTTP/WebSocket server running on port ${PORT}`);
 });
 
-const server = app.listen(process.env.PORT || 3000, () => {
-  console.log(`Server listening on port ${process.env.PORT || 3000}`);
-});
-
-// Upgrade HTTP server to handle WebSocket connections
-server.on("upgrade", (request, socket, head) => {
-  wss.handleUpgrade(request, socket, head, (ws) => {
-    wss.emit("connection", ws, request);
+server.on("upgrade", (req, socket, head) => {
+  wss.handleUpgrade(req, socket, head, (ws) => {
+    wss.emit("connection", ws, req);
   });
 });
