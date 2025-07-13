@@ -4,6 +4,17 @@ const path = require("path");
 
 const app = express();  // Declare app before usage
 
+app.post("/send", (req, res) => {
+  const message = req.body.message;
+  clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(message);
+    }
+  });
+  res.send("Message sent to WebSocket clients.");
+});
+
+
 const wss = new WebSocket.Server({ noServer: true });
 
 const clients = new Set();
