@@ -6,6 +6,11 @@ const socketUrl = `${protocol}://${window.location.host}`;
 
 const socket = new WebSocket(socketUrl);
 
+socket.addEventListener("message", (event) => {
+  consoleEl.textContent += event.data + "\n";
+  consoleEl.parentElement.scrollTop = consoleEl.parentElement.scrollHeight;
+});
+
 socket.addEventListener("open", () => {
   console.log("WebSocket connected");
 });
