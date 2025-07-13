@@ -1,0 +1,55 @@
+/* General layout */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #121212;
+  color: #e0e0e0;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  height: 100vh;
+  padding-top: 40px;
+}
+
+/* Title */
+h2 {
+  color: #ffffff;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+/* Console container */
+#console-container {
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  width: 90%;
+  max-width: 800px;
+  height: 70vh;
+  overflow-y: auto;
+  border: 1px solid #333;
+}
+
+/* Chat text */
+#console {
+  white-space: pre-wrap;
+  font-family: Consolas, monospace;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Scrollbar */
+#console-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+#console-container::-webkit-scrollbar-thumb {
+  background-color: #444;
+  border-radius: 4px;
+}
+
+#console-container::-webkit-scrollbar-track {
+  background-color: #1e1e1e;
+}
